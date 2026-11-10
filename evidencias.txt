@@ -1,0 +1,129 @@
+
+=== 1. Listar todos
+$ curl http://localhost:8080/chamados
+HTTP/1.1 200 
+Content-Type: application/json
+Content-Length: 1733
+Date: Tue, 10 Nov 2026 20:35:42 GMT
+
+[{"id":1,"titulo":"Impressora do financeiro nao imprime","solicitante":"Ana Souza","setor":"Financeiro","prioridade":"ALTA","status":"ABERTO"},{"id":2,"titulo":"Computador nao liga apos queda de energia","solicitante":"Bruno Lima","setor":"RH","prioridade":"ALTA","status":"EM_ANDAMENTO"},{"id":3,"titulo":"Solicitar acesso ao sistema de vendas","solicitante":"Carla Dias","setor":"Comercial","prioridade":"MEDIA","status":"ABERTO"},{"id":4,"titulo":"Wi-Fi instavel na sala de reunioes","solicitante":"Daniel Rocha","setor":"Marketing","prioridade":"MEDIA","status":"EM_ANDAMENTO"},{"id":5,"titulo":"Redefinir senha da conta de e-mail","solicitante":"Elisa Prado","setor":"Financeiro","prioridade":"BAIXA","status":"RESOLVIDO"},{"id":6,"titulo":"Servidor de arquivos fora do ar","solicitante":"Fabio Nunes","setor":"TI","prioridade":"ALTA","status":"ABERTO"},{"id":7,"titulo":"Trocar toner da impressora do RH","solicitante":"Gabriela Melo","setor":"RH","prioridade":"BAIXA","status":"RESOLVIDO"},{"id":8,"titulo":"Instalar planilhas no notebook novo","solicitante":"Heitor Alves","setor":"Logistica","prioridade":"BAIXA","status":"ABERTO"},{"id":9,"titulo":"VPN nao conecta para trabalho remoto","solicitante":"Isabela Costa","setor":"Comercial","prioridade":"ALTA","status":"RESOLVIDO"},{"id":10,"titulo":"Monitor com tela piscando","solicitante":"Joao Pereira","setor":"Logistica","prioridade":"MEDIA","status":"RESOLVIDO"},{"id":11,"titulo":"Impressora de etiquetas sem conexao de rede","solicitante":"Karen Martins","setor":"Logistica","prioridade":"ALTA","status":"EM_ANDAMENTO"},{"id":12,"titulo":"Criar conta de acesso para estagiario","solicitante":"Lucas Barros","setor":"Marketing","prioridade":"BAIXA","status":"ABERTO"}]
+
+=== 2. Consultar por ID (existente)
+$ curl http://localhost:8080/chamados/1
+HTTP/1.1 200 
+Content-Type: application/json
+Content-Length: 141
+Date: Tue, 10 Nov 2026 20:35:42 GMT
+
+{"id":1,"titulo":"Impressora do financeiro nao imprime","solicitante":"Ana Souza","setor":"Financeiro","prioridade":"ALTA","status":"ABERTO"}
+
+=== 3. Consultar por ID (inexistente)
+$ curl http://localhost:8080/chamados/999
+HTTP/1.1 404 
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Tue, 10 Nov 2026 20:35:42 GMT
+
+{"timestamp":"2026-11-10T20:35:42.680Z","status":404,"error":"Not Found","path":"/chamados/999"}
+
+=== 4. Filtrar por setor
+$ curl http://localhost:8080/chamados/setor?nome=financeiro
+HTTP/1.1 200 
+Content-Type: application/json
+Content-Length: 289
+Date: Tue, 10 Nov 2026 20:35:42 GMT
+
+[{"id":1,"titulo":"Impressora do financeiro nao imprime","solicitante":"Ana Souza","setor":"Financeiro","prioridade":"ALTA","status":"ABERTO"},{"id":5,"titulo":"Redefinir senha da conta de e-mail","solicitante":"Elisa Prado","setor":"Financeiro","prioridade":"BAIXA","status":"RESOLVIDO"}]
+
+=== 5. Filtrar por prioridade
+$ curl http://localhost:8080/chamados/prioridade?nivel=alta
+HTTP/1.1 200 
+Content-Type: application/json
+Content-Length: 727
+Date: Tue, 10 Nov 2026 20:35:42 GMT
+
+[{"id":1,"titulo":"Impressora do financeiro nao imprime","solicitante":"Ana Souza","setor":"Financeiro","prioridade":"ALTA","status":"ABERTO"},{"id":2,"titulo":"Computador nao liga apos queda de energia","solicitante":"Bruno Lima","setor":"RH","prioridade":"ALTA","status":"EM_ANDAMENTO"},{"id":6,"titulo":"Servidor de arquivos fora do ar","solicitante":"Fabio Nunes","setor":"TI","prioridade":"ALTA","status":"ABERTO"},{"id":9,"titulo":"VPN nao conecta para trabalho remoto","solicitante":"Isabela Costa","setor":"Comercial","prioridade":"ALTA","status":"RESOLVIDO"},{"id":11,"titulo":"Impressora de etiquetas sem conexao de rede","solicitante":"Karen Martins","setor":"Logistica","prioridade":"ALTA","status":"EM_ANDAMENTO"}]
+
+=== 6. Buscar por titulo (sem diferenciar maiusculas)
+$ curl http://localhost:8080/chamados/busca?texto=IMPRESSORA
+HTTP/1.1 200 
+Content-Type: application/json
+Content-Length: 440
+Date: Tue, 10 Nov 2026 20:35:42 GMT
+
+[{"id":1,"titulo":"Impressora do financeiro nao imprime","solicitante":"Ana Souza","setor":"Financeiro","prioridade":"ALTA","status":"ABERTO"},{"id":7,"titulo":"Trocar toner da impressora do RH","solicitante":"Gabriela Melo","setor":"RH","prioridade":"BAIXA","status":"RESOLVIDO"},{"id":11,"titulo":"Impressora de etiquetas sem conexao de rede","solicitante":"Karen Martins","setor":"Logistica","prioridade":"ALTA","status":"EM_ANDAMENTO"}]
+
+=== 7. Busca sem correspondencia
+$ curl http://localhost:8080/chamados/busca?texto=satelite
+HTTP/1.1 200 
+Content-Type: application/json
+Content-Length: 2
+Date: Tue, 10 Nov 2026 20:35:42 GMT
+
+[]
+
+=== 8. Criticos (ALTA e nao resolvidos)
+$ curl http://localhost:8080/chamados/criticos
+HTTP/1.1 200 
+Content-Type: application/json
+Content-Length: 579
+Date: Tue, 10 Nov 2026 20:35:42 GMT
+
+[{"id":1,"titulo":"Impressora do financeiro nao imprime","solicitante":"Ana Souza","setor":"Financeiro","prioridade":"ALTA","status":"ABERTO"},{"id":2,"titulo":"Computador nao liga apos queda de energia","solicitante":"Bruno Lima","setor":"RH","prioridade":"ALTA","status":"EM_ANDAMENTO"},{"id":6,"titulo":"Servidor de arquivos fora do ar","solicitante":"Fabio Nunes","setor":"TI","prioridade":"ALTA","status":"ABERTO"},{"id":11,"titulo":"Impressora de etiquetas sem conexao de rede","solicitante":"Karen Martins","setor":"Logistica","prioridade":"ALTA","status":"EM_ANDAMENTO"}]
+
+=== 9. Resumo por status
+$ curl http://localhost:8080/chamados/resumo
+HTTP/1.1 200 
+Content-Type: application/json
+Content-Length: 55
+Date: Tue, 10 Nov 2026 20:35:42 GMT
+
+{"abertos":5,"emAndamento":3,"resolvidos":4,"total":12}
+
+=== 10. Cadastrar novo chamado
+$ curl -X POST http://localhost:8080/chamados -H Content-Type: application/json -d {"titulo":"Teclado sem resposta","solicitante":"Maria Silva","setor":"Juridico","prioridade":"media"}
+HTTP/1.1 201 
+Location: /chamados/13
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Tue, 10 Nov 2026 20:35:42 GMT
+
+{"id":13,"titulo":"Teclado sem resposta","solicitante":"Maria Silva","setor":"Juridico","prioridade":"MEDIA","status":"ABERTO"}
+
+=== 11. Verificar cadastro (id 13)
+$ curl http://localhost:8080/chamados/13
+HTTP/1.1 200 
+Content-Type: application/json
+Content-Length: 127
+Date: Tue, 10 Nov 2026 20:35:42 GMT
+
+{"id":13,"titulo":"Teclado sem resposta","solicitante":"Maria Silva","setor":"Juridico","prioridade":"MEDIA","status":"ABERTO"}
+
+=== 12. Resumo apos cadastro
+$ curl http://localhost:8080/chamados/resumo
+HTTP/1.1 200 
+Content-Type: application/json
+Content-Length: 55
+Date: Tue, 10 Nov 2026 20:35:42 GMT
+
+{"abertos":6,"emAndamento":3,"resolvidos":4,"total":13}
+
+=== 13. POST invalido (sem titulo)
+$ curl -X POST http://localhost:8080/chamados -H Content-Type: application/json -d {"solicitante":"Maria","setor":"TI","prioridade":"ALTA"}
+HTTP/1.1 400 
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Tue, 10 Nov 2026 20:35:42 GMT
+Connection: close
+
+{"timestamp":"2026-11-10T20:35:42.828Z","status":400,"error":"Bad Request","path":"/chamados"}
+
+=== 14. Prioridade invalida
+$ curl http://localhost:8080/chamados/prioridade?nivel=urgente
+HTTP/1.1 400 
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Tue, 10 Nov 2026 20:35:42 GMT
+Connection: close
+
+{"timestamp":"2026-11-10T20:35:42.839Z","status":400,"error":"Bad Request","path":"/chamados/prioridade"}
